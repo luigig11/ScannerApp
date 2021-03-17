@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
+import {connect} from 'react-redux'
+/* import { StatusBar } from 'expo-status-bar'; */
 
-const Scanner = () => {
+const Scanner = ({scannedList}) => {
     return (
 
         <View style={styles.container}>
@@ -21,4 +22,10 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Scanner;
+const mapStateToProps = (state) => {
+    return {
+        scanned: state.scanned
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps) (Scanner);
