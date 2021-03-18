@@ -1,16 +1,10 @@
 const reducer = (state, action) => {
     switch (action.type) {
-        case 'SET_LIST':
+        case 'SET_QRLIST':
             return {
                 ...state,
-                scannedList: [state.scannedList]
-            }
-        case 'BEGIN_SCANN':
-            return {
-                ...state,
-                scanned: true
-            }
-    
+                QrString: [...state.QrString, action.payload]
+            }           
         default:
             return state;
     }

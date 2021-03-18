@@ -3,6 +3,9 @@ import { View, Text, StyleSheet, Dimensions, Button, Pressable } from 'react-nat
 /* import { StatusBar } from 'expo-status-bar'; */
 import { BarCodeScanner, BarCodeScannerResult } from 'expo-barcode-scanner';
 import BarcodeMask from 'react-native-barcode-mask';
+import {connect} from 'react-redux'
+import {setQRList} from '../Redux/actions/index'
+import { useLinkProps } from '@react-navigation/native';
 
 const FINDERWIDTH = 280;
 const FINDERHEIGHT = 230;
@@ -11,7 +14,7 @@ const DEVICE_HEIGHT = Dimensions.get('window').height;
 const VIEWMINX = (DEVICE_WIDTH - FINDERWIDTH) / 2;
 const VIEWMINY = (DEVICE_HEIGHT - FINDERHEIGHT) / 2;
 
-const Scanner = ({ navigation }) => {
+const Scanner = ({ navigation, setQRList }) => {
 
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
@@ -46,6 +49,7 @@ const Scanner = ({ navigation }) => {
             /* console.log(`x: ${x}, y: ${y}`); */
             if (x >= VIEWMINX && y >= VIEWMINY && x <= (VIEWMINX + FINDERWIDTH / 2) && y <= (VIEWMINY + FINDERHEIGHT / 2)) {
                 setScanned(true);
+                setQRList(data);
                 alert(`Bar code with type ${type} and data ${data}`);
             }
 
@@ -126,11 +130,10 @@ const styles = StyleSheet.create({
     }
 })
 
-const mapStateToProps = (state) => {
-    return {
-        scanned: state.scanned
-    }
+const mapDispatchToProps = {
+    setQRList
 }
 
-//export default connect(mapStateToProps, mapDispatchToProps) (Scanner);
-export default Scanner
+
+export default connect(null, mapDispatchToProps) (Scanner);
+/* export default Scanner */

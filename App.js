@@ -11,23 +11,22 @@ import reducer from './src/Redux/reducers/index'
 
 const tabs = createBottomTabNavigator(); 
 
-/* const intialState = {
-  scanned: false,
-  scannedList: []
+const intialState = {
+  QrString: []
 }
 
-const store = createStor(reducer, intialState); */
+const store = createStore(reducer, intialState);
 
 export default function App() {
   return (
-    /* <Provider store={store}> */
+    <Provider store={store}> 
       <NavigationContainer /* style={styles.container} */>
         <tabs.Navigator initialRouteName={Scanner}>
           <tabs.Screen name="Scanner" component={Scanner} />
           <tabs.Screen name="List" component={QRList} />
         </tabs.Navigator>
       </NavigationContainer>
-    /* </Provider> */
+    </Provider> 
   );
 }
 
