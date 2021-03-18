@@ -3060,6 +3060,13 @@ expo-asset@~8.2.1:
     path-browserify "^1.0.0"
     url-parse "^1.4.4"
 
+expo-barcode-scanner@~9.1.0:
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/expo-barcode-scanner/-/expo-barcode-scanner-9.1.0.tgz#c699c2ef99478b0ea484a1ccc1f60562f60a3663"
+  integrity sha512-gf2MGw9Hs8cH0Xz+JdPSHg9mHxR46acENg3eh1dMsXbJyGCbmLIzvlQhBW7f2Cuqcx7Q30kGF91wzaK+VVUEoQ==
+  dependencies:
+    lodash "^4.6.0"
+
 expo-constants@~9.3.3:
   version "9.3.5"
   resolved "https://registry.yarnpkg.com/expo-constants/-/expo-constants-9.3.5.tgz#78085763e8ed100a5f2df7c682fd99631aa03d5e"
@@ -5327,6 +5334,13 @@ react-is@^17.0.1:
   version "17.0.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.1.tgz#5b3531bd76a645a4c9fb6e693ed36419e3301339"
   integrity sha512-NAnt2iGDXohE5LI7uBnLnqvLQMtzhkiAOLXTmv+qnF9Ky7xAPcX8Up/xWIhxvLVGJvuLiNc4xQLtuqDRzb4fSA==
+
+react-native-barcode-mask@^1.2.4:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/react-native-barcode-mask/-/react-native-barcode-mask-1.2.4.tgz#271b868d1d9040e04b9f8f32ec4ee6f6a2639b3b"
+  integrity sha512-Jh3mEs/xUBs/z9mKkj2mM07MMQ2SdtW9mU4FOo5DQyA2kDte6lW87vIYFkWw1nxpzc7sy28ahMsgId8LTtKZsg==
+  dependencies:
+    prop-types "^15.6.2"
 
 react-native-gesture-handler@1.8.0:
   version "1.8.0"
