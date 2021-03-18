@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import {connect} from 'react-redux'
-/* import { StatusBar } from 'expo-status-bar'; */
-
-const Scanner = ({scannedList}) => {
-=======
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Dimensions, Button, Pressable } from 'react-native';
 /* import { StatusBar } from 'expo-status-bar'; */
@@ -68,7 +60,6 @@ const Scanner = ({ navigation }) => {
         return <Text>No acces to camera</Text>
     }
 
->>>>>>> Task3
     return (
 
         <View style={{ flex: 1 }}>
