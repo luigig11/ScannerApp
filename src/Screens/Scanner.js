@@ -11,11 +11,12 @@ const DEVICE_HEIGHT = Dimensions.get('window').height;
 const VIEWMINX = (DEVICE_WIDTH - FINDERWIDTH) / 2;
 const VIEWMINY = (DEVICE_HEIGHT - FINDERHEIGHT) / 2;
 
-const Scanner = () => {
+const Scanner = ({ navigation }) => {
 
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
-    const [type, setType] = useState(BarCodeScanner.Constants.Type.back)
+    const [type, setType] = useState(BarCodeScanner.Constants.Type.back);
+    const [focus, setFocus] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -24,10 +25,22 @@ const Scanner = () => {
         })();
     }, [])
 
+    useEffect(() => {
+        const isfocus = () => setFocus(true)
+        navigation.addListener('focus', isfocus);
+        return () => navigation.removeListener('focus', isfocus);
+    }, [])
+
+    useEffect(() => {
+        const unfocus = () => setFocus(false);
+        navigation.addListener('blur', () => unfocus);
+        return () => navigation.removeListener('blur', unfocus);
+    }, [])
+
     const handledBarcodeScanned = (BarCodeScannerResult) => {
-       /*  console.log(BarCodeScannerResult); */
+        /*  console.log(BarCodeScannerResult); */
         const { type, data, bounds } = BarCodeScannerResult
-        console.log(`type: ${type} data: ${data} origin: ${{bounds}}`)
+        console.log(`type: ${type} data: ${data} origin: ${{ bounds }}`)
         if (!scanned) {
             const { x, y } = bounds.origin;
             /* console.log(`x: ${x}, y: ${y}`); */
@@ -42,7 +55,7 @@ const Scanner = () => {
     if (hasPermission === null) {
         return <Text>Requesting for camera permision</Text>
     }
-    
+
     if (hasPermission === false) {
         return <Text>No acces to camera</Text>
     }
@@ -50,39 +63,46 @@ const Scanner = () => {
     return (
 
         <View style={{ flex: 1 }}>
-            <BarCodeScanner
-                onBarCodeScanned={scanned ? undefined : handledBarcodeScanned}
-                type={type}
-                barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
-                style={[StyleSheet.absoluteFillObject, styles.container]}
-            >
-                <View
-                    style={{
-                        flex: 1,
-                        backgroundColor: 'transparent',
-                        flexDirection: 'row'
-                    }}
-                >
-                    <Pressable
-                        style={{
-                            flex: 1,
-                            alignItems: 'flex-end'
-                        }}
-                        onPress={() => {
-                            setType(
-                                type === BarCodeScanner.Constants.Type.back ? BarCodeScanner.Constants.Type.front : BarCodeScanner.Constants.Type.back
-                            );
-                        }}
+            {
+                focus === true
+
+                    ? <BarCodeScanner
+                        onBarCodeScanned={scanned ? undefined : handledBarcodeScanned}
+                        type={type}
+                        barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
+                        style={[StyleSheet.absoluteFillObject, styles.container]}
                     >
-                        <Text style={{ fontSize: 18, margin: 5, color: 'white' }} >Filp</Text>
-                    </Pressable>
-                </View>
-                <BarcodeMask edgeColor={"#62B1F6"} showAnimatedLine />
-                {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
-            </BarCodeScanner>
+                        <View
+                            style={{
+                                flex: 1,
+                                backgroundColor: 'transparent',
+                                flexDirection: 'row'
+                            }}
+                        >
+                            <Pressable
+                                style={{
+                                    flex: 1,
+                                    alignItems: 'flex-end'
+                                }}
+                                onPress={() => {
+                                    setType(
+                                        type === BarCodeScanner.Constants.Type.back ? BarCodeScanner.Constants.Type.front : BarCodeScanner.Constants.Type.back
+                                    );
+                                }}
+                            >
+                                <Text style={{ fontSize: 18, margin: 5, color: 'white' }} >Filp</Text>
+                            </Pressable>
+                        </View>
+                        <BarcodeMask edgeColor={"#62B1F6"} showAnimatedLine />
+                        {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
+                    </BarCodeScanner>
+
+                    : null
+            }
+
         </View>
-    
-    
+
+
     );
 
 }
