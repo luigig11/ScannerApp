@@ -132,4 +132,5 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps) (Scanner);
+//export default connect(mapStateToProps, mapDispatchToProps) (Scanner);
+export default Scanner

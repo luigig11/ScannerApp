@@ -9,25 +9,25 @@ import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import reducer from './src/Redux/reducers/index'
 
-const tabs = createBottomTabNavigator();
+const tabs = createBottomTabNavigator(); 
 
-const intialState = {
+/* const intialState = {
   scanned: false,
   scannedList: []
 }
 
-const store = createStor(reducer, intialState);
+const store = createStor(reducer, intialState); */
 
 export default function App() {
   return (
-    <Provider store={store}>
+    /* <Provider store={store}> */
       <NavigationContainer /* style={styles.container} */>
         <tabs.Navigator initialRouteName={Scanner}>
           <tabs.Screen name="Scanner" component={Scanner} />
           <tabs.Screen name="List" component={QRList} />
         </tabs.Navigator>
       </NavigationContainer>
-    </Provider>
+    /* </Provider> */
   );
 }
 
