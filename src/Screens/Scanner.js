@@ -4,8 +4,8 @@ import { View, Text, StyleSheet, Dimensions, Button, Pressable } from 'react-nat
 import { BarCodeScanner, BarCodeScannerResult } from 'expo-barcode-scanner';
 import BarcodeMask from 'react-native-barcode-mask';
 import {connect} from 'react-redux'
-import {setQRList} from '../Redux/actions/index'
-import { useLinkProps } from '@react-navigation/native';
+import {setQRList, setScanned, setFocus, setHasPermission } from '../Redux/actions/index'
+/* import { useLinkProps } from '@react-navigation/native'; */
 
 const FINDERWIDTH = 280;
 const FINDERHEIGHT = 230;
@@ -14,13 +14,13 @@ const DEVICE_HEIGHT = Dimensions.get('window').height;
 const VIEWMINX = (DEVICE_WIDTH - FINDERWIDTH) / 2;
 const VIEWMINY = (DEVICE_HEIGHT - FINDERHEIGHT) / 2;
 
-const Scanner = ({ navigation, setQRList }) => {
+const Scanner = ({ navigation, setQRList, setScanned, scanned, setFocus, focus, setHasPermission, hasPermission }) => {
 
-    const [hasPermission, setHasPermission] = useState(null);
-    const [scanned, setScanned] = useState(false);
-    const [type, setType] = useState(BarCodeScanner.Constants.Type.back);
-    const [focus, setFocus] = useState(false);
-
+    /* const [hasPermission, setHasPermission] = useState(null); */
+    /* const [scanned, setScanned] = useState(false); */
+    /* const [type, setType] = useState(BarCodeScanner.Constants.Type.back); */
+    /* const [focus, setFocus] = useState(false);
+ */
     useEffect(() => {
         (async () => {
             const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -72,7 +72,7 @@ const Scanner = ({ navigation, setQRList }) => {
 
                     ? <BarCodeScanner
                         onBarCodeScanned={scanned ? undefined : handledBarcodeScanned}
-                        type={type}
+                        type={BarCodeScanner.Constants.Type.back}
                         barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
                         style={[StyleSheet.absoluteFillObject, styles.container]}
                     >
@@ -83,7 +83,7 @@ const Scanner = ({ navigation, setQRList }) => {
                                 flexDirection: 'row'
                             }}
                         >
-                            <Pressable
+                            {/* <Pressable
                                 style={{
                                     flex: 1,
                                     alignItems: 'flex-end'
@@ -95,7 +95,7 @@ const Scanner = ({ navigation, setQRList }) => {
                                 }}
                             >
                                 <Text style={{ fontSize: 18, margin: 5, color: 'white' }} >Filp</Text>
-                            </Pressable>
+                            </Pressable> */}
                         </View>
                         <BarcodeMask edgeColor={"#62B1F6"} showAnimatedLine />
                         {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
@@ -131,9 +131,20 @@ const styles = StyleSheet.create({
 })
 
 const mapDispatchToProps = {
-    setQRList
+    setQRList,
+    setScanned,
+    setFocus,
+    setHasPermission
+}
+
+const mapStateToProps = state => {
+    return {
+        scanned: state.scanned,
+        focus: state.focus,
+        hasPermission: state.hasPermission
+    }
 }
 
 
-export default connect(null, mapDispatchToProps) (Scanner);
+export default connect(mapStateToProps, mapDispatchToProps) (Scanner);
 /* export default Scanner */

@@ -12,7 +12,10 @@ import reducer from './src/Redux/reducers/index'
 const tabs = createBottomTabNavigator(); 
 
 const intialState = {
-  QrString: []
+  QrString: [],
+  scanned: false,
+  focus: false,
+  hasPermission: null
 }
 
 const store = createStore(reducer, intialState);
