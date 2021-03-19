@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
 /* import { StatusBar } from 'expo-status-bar'; */
 import {connect} from 'react-redux'
+import ListItem from './ListItem';
 
 const QRList = ({QrString}) => {
     
@@ -9,7 +10,11 @@ const QRList = ({QrString}) => {
         
         <View style={ styles.container} >
             {console.log(`decoded QrString: ${QrString}`)}
-            <Text>Pantalla para hacer listar resultados</Text>
+            <FlatList 
+                data={QrString}
+                renderItem={({item}) => <ListItem item={item} />}
+            />
+            {/* <Text>Pantalla para hacer listar resultados</Text> */}
             {/* <StatusBar style="auto" /> */}
         </View>
 
