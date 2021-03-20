@@ -3,9 +3,11 @@ import { View, Text, StyleSheet, Dimensions, Button, Pressable } from 'react-nat
 /* import { StatusBar } from 'expo-status-bar'; */
 import { BarCodeScanner, BarCodeScannerResult } from 'expo-barcode-scanner';
 import BarcodeMask from 'react-native-barcode-mask';
-import {connect} from 'react-redux'
-import {setQRList, setScanned, setFocus, setHasPermission } from '../Redux/actions/index'
-/* import { useLinkProps } from '@react-navigation/native'; */
+import { connect } from 'react-redux'
+import { setQRList, setScanned, setFocus, setHasPermission } from '../Redux/actions/index'
+import { useFocusEffect } from '@react-navigation/native';
+import { Appbar } from 'react-native-paper'
+
 
 const FINDERWIDTH = 280;
 const FINDERHEIGHT = 230;
@@ -28,32 +30,50 @@ const Scanner = ({ navigation, setQRList, setScanned, scanned, setFocus, focus, 
         })();
     }, [])
 
-    useEffect(() => {
+    useFocusEffect(
+        React.useCallback(() => {
+            setFocus(true);    
+          return () => setFocus(false);
+        }, [])
+      );
+
+   /*  useEffect(() => {
         const isfocus = () => setFocus(true)
         navigation.addListener('focus', isfocus);
-        return () => navigation.removeListener('focus', isfocus);
-    }, [])
+        console.log(`focus: ${focus}`)
+        return () => {
+            setFocus(false)
+            navigation.removeListener('focus', isfocus);
+        }
+    }, []) */
 
-    useEffect(() => {
-        const unfocus = () => setFocus(false);
+    /* useEffect(() => {
+        const unfocus = () => {
+            setScanned(true); 
+            setFocus(true);
+            console.log(`focus: ${focus}`)
+        }
         navigation.addListener('blur', () => unfocus);
-        return () => navigation.removeListener('blur', unfocus);
-    }, [])
+        return () => navigation.removeListener('blur', unfocus); 
+    }, []) */
 
     const handledBarcodeScanned = (BarCodeScannerResult) => {
         /*  console.log(BarCodeScannerResult); */
         const { type, data, bounds } = BarCodeScannerResult
         console.log(`type: ${type} data: ${data} origin: ${{ bounds }}`)
-        if (!scanned) {
-            const { x, y } = bounds.origin;
-            /* console.log(`x: ${x}, y: ${y}`); */
-            if (x >= VIEWMINX && y >= VIEWMINY && x <= (VIEWMINX + FINDERWIDTH / 2) && y <= (VIEWMINY + FINDERHEIGHT / 2)) {
-                setScanned(true);
-                setQRList(data);
-                alert(`Bar code with type ${type} and data ${data}`);
-            }
-
-        }
+        /* setScanned(true);
+        setQRList(data);
+        alert(`Bar code with type ${type} and data ${data}`); */
+         if (!scanned) {
+             const { x, y } = bounds.origin;
+             console.log(`x: ${x}, y: ${y}`); 
+             if (x >= VIEWMINX && y >= VIEWMINY && x <= (VIEWMINX + FINDERWIDTH / 2) && y <= (VIEWMINY + FINDERHEIGHT / 2)) {
+                 setScanned(true);
+                 setQRList(data);
+                 alert(`Bar code with type ${type} and data ${data}`);
+             }
+ 
+         }
     }
 
     if (hasPermission === null) {
@@ -67,11 +87,15 @@ const Scanner = ({ navigation, setQRList, setScanned, scanned, setFocus, focus, 
     return (
 
         <View style={{ flex: 1 }}>
+            <Appbar.Header>
+                <Appbar.Content title='Scanner' />
+            </Appbar.Header>
             {
                 focus === true
 
                     ? <BarCodeScanner
-                        onBarCodeScanned={scanned ? undefined : handledBarcodeScanned}
+                        onBarCodeScanned={scanned ? undefined : handledBarcodeScanned} 
+                        /* onBarCodeScanned={handledBarcodeScanned} */
                         type={BarCodeScanner.Constants.Type.back}
                         barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
                         style={[StyleSheet.absoluteFillObject, styles.container]}
@@ -146,5 +170,5 @@ const mapStateToProps = state => {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps) (Scanner);
+export default connect(mapStateToProps, mapDispatchToProps)(Scanner);
 /* export default Scanner */

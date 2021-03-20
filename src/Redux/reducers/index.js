@@ -8,7 +8,7 @@ const reducer = (state, action) => {
         case 'SET_SCANNED':
             return {
                 ...state,
-                scanned: action.payload
+                scanned: action.payload                
             }
         case 'SET_FOCUS':
             return {
