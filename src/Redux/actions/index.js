@@ -18,6 +18,16 @@ export const setHasPermission = payload => ({
     payload
 });
 
+export const setQuery = payload => ({
+    type: 'SET_QUERY',
+    payload
+});
+
+export const setFilteredList = payload => ({
+    type: 'SET_FILTEREDLIST',
+    payload
+}); 
+
 /* export const beginScann = scanned = ({
     type: 'BEGIN_SCANN',
     scanned: true

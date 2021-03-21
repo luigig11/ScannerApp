@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, Dimensions, Button, Pressable } from 'react-nat
 import { BarCodeScanner, BarCodeScannerResult } from 'expo-barcode-scanner';
 import BarcodeMask from 'react-native-barcode-mask';
 import { connect } from 'react-redux'
-import { setQRList, setScanned, setFocus, setHasPermission } from '../Redux/actions/index'
+import { setQRList, setScanned, setFocus, setHasPermission, setFilteredList } from '../Redux/actions/index'
 import { useFocusEffect } from '@react-navigation/native';
 import { Appbar } from 'react-native-paper'
 
@@ -16,13 +16,8 @@ const DEVICE_HEIGHT = Dimensions.get('window').height;
 const VIEWMINX = (DEVICE_WIDTH - FINDERWIDTH) / 2;
 const VIEWMINY = (DEVICE_HEIGHT - FINDERHEIGHT) / 2;
 
-const Scanner = ({ navigation, setQRList, setScanned, scanned, setFocus, focus, setHasPermission, hasPermission }) => {
+const Scanner = ({ navigation, setQRList, setScanned, scanned, setFocus, focus, setHasPermission, hasPermission, setFilteredList }) => {
 
-    /* const [hasPermission, setHasPermission] = useState(null); */
-    /* const [scanned, setScanned] = useState(false); */
-    /* const [type, setType] = useState(BarCodeScanner.Constants.Type.back); */
-    /* const [focus, setFocus] = useState(false);
- */
     useEffect(() => {
         (async () => {
             const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -32,48 +27,29 @@ const Scanner = ({ navigation, setQRList, setScanned, scanned, setFocus, focus, 
 
     useFocusEffect(
         React.useCallback(() => {
-            setFocus(true);    
-          return () => setFocus(false);
-        }, [])
-      );
-
-   /*  useEffect(() => {
-        const isfocus = () => setFocus(true)
-        navigation.addListener('focus', isfocus);
-        console.log(`focus: ${focus}`)
-        return () => {
-            setFocus(false)
-            navigation.removeListener('focus', isfocus);
-        }
-    }, []) */
-
-    /* useEffect(() => {
-        const unfocus = () => {
-            setScanned(true); 
             setFocus(true);
-            console.log(`focus: ${focus}`)
-        }
-        navigation.addListener('blur', () => unfocus);
-        return () => navigation.removeListener('blur', unfocus); 
-    }, []) */
+            /* setScanned(false); */
+            return () => {
+                setScanned(true);
+                setFocus(false);
+            }
+        }, [])
+    );
 
     const handledBarcodeScanned = (BarCodeScannerResult) => {
-        /*  console.log(BarCodeScannerResult); */
         const { type, data, bounds } = BarCodeScannerResult
-        console.log(`type: ${type} data: ${data} origin: ${{ bounds }}`)
-        /* setScanned(true);
-        setQRList(data);
-        alert(`Bar code with type ${type} and data ${data}`); */
-         if (!scanned) {
-             const { x, y } = bounds.origin;
-             console.log(`x: ${x}, y: ${y}`); 
-             if (x >= VIEWMINX && y >= VIEWMINY && x <= (VIEWMINX + FINDERWIDTH / 2) && y <= (VIEWMINY + FINDERHEIGHT / 2)) {
-                 setScanned(true);
-                 setQRList(data);
-                 alert(`Bar code with type ${type} and data ${data}`);
-             }
- 
-         }
+        /* console.log(`type: ${type} data: ${data} origin: ${{ bounds }}`) */
+        if (!scanned) {
+            const { x, y } = bounds.origin;
+            console.log(`x: ${x}, y: ${y}`);
+            if (x >= VIEWMINX && y >= VIEWMINY && x <= (VIEWMINX + FINDERWIDTH / 2) && y <= (VIEWMINY + FINDERHEIGHT / 2)) {
+                setScanned(true);
+                setQRList(data);
+                setFilteredList("");
+                alert(`Bar code with type ${type} and data ${data}`);
+            }
+
+        }
     }
 
     if (hasPermission === null) {
@@ -89,17 +65,16 @@ const Scanner = ({ navigation, setQRList, setScanned, scanned, setFocus, focus, 
         <View style={{ flex: 1 }}>
             <Appbar.Header>
                 <Appbar.Content title='Scanner' />
-            </Appbar.Header>
+            </Appbar.Header>           
             {
                 focus === true
 
                     ? <BarCodeScanner
-                        onBarCodeScanned={scanned ? undefined : handledBarcodeScanned} 
-                        /* onBarCodeScanned={handledBarcodeScanned} */
+                        onBarCodeScanned={scanned ? undefined : handledBarcodeScanned}
                         type={BarCodeScanner.Constants.Type.back}
                         barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
                         style={[StyleSheet.absoluteFillObject, styles.container]}
-                    >
+                    >                        
                         <View
                             style={{
                                 flex: 1,
@@ -107,7 +82,7 @@ const Scanner = ({ navigation, setQRList, setScanned, scanned, setFocus, focus, 
                                 flexDirection: 'row'
                             }}
                         >
-                            {/* <Pressable
+                             <Pressable
                                 style={{
                                     flex: 1,
                                     alignItems: 'flex-end'
@@ -119,11 +94,12 @@ const Scanner = ({ navigation, setQRList, setScanned, scanned, setFocus, focus, 
                                 }}
                             >
                                 <Text style={{ fontSize: 18, margin: 5, color: 'white' }} >Filp</Text>
-                            </Pressable> */}
+                            </Pressable>  
                         </View>
                         <BarcodeMask edgeColor={"#62B1F6"} showAnimatedLine />
-                        {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
+                        {scanned && <Button title={'Tap to Scan'} onPress={() => setScanned(false)} />}
                     </BarCodeScanner>
+                    
 
                     : null
             }
@@ -141,6 +117,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
+    
 
     title: {
         fontSize: 20,
@@ -158,7 +135,8 @@ const mapDispatchToProps = {
     setQRList,
     setScanned,
     setFocus,
-    setHasPermission
+    setHasPermission,
+    setFilteredList,
 }
 
 const mapStateToProps = state => {
@@ -171,4 +149,3 @@ const mapStateToProps = state => {
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(Scanner);
-/* export default Scanner */

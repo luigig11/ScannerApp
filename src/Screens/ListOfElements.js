@@ -1,39 +1,34 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet, FlatList, Dimensions, TextInput } from 'react-native';
 /* import { StatusBar } from 'expo-status-bar'; */
 import {connect} from 'react-redux'
-import ListItem from './ListItem';
-import {Appbar, List, Searchbar, TextInput} from 'react-native-paper'
-import {useState, useEffect} from 'react'
+import {Appbar, List} from 'react-native-paper'
+import {setQRList, setQuery, setFilteredList} from '../Redux/actions/index'
 
-const QRList = ({QrString}) => {
-    const [search, setSearch] = useState(false);
 
-    const handleSearch = () => {
-        search ? setSearch(false) : setSearch(true)
-        console.log(`search: ${search}`)
-    }
+const WINDOW_WIDTH = Dimensions.get('window').width
+
+const QRList = ({QrString, filteredList, setFilteredList, setQuery, query}) => {
+
+   const onhandleSearch = (query) => {        
+        setQuery(query);        
+        setFilteredList(query)
+        console.log(`the posibble matches are: ${filteredList}`)
+        console.log(`filterList: ${filteredList}`)
+    } 
 
     return (
         
         <View style={ styles.container} >
             {console.log(`decoded QrString: ${QrString}, id: ${QrString.length}`)}
-            <Appbar.Header>
-                <Appbar.Action icon='magnify' onPress={handleSearch}/>
-                {/* <Appbar.Content title='QR Data' /> */}
-                {search ?  <Searchbar iconColor='#FFFFFF' />: <Appbar.Content title='QR Data' />}
-            </Appbar.Header>
-            {/* <Searchbar /> */}
-            <FlatList 
-                data={QrString}
-                /* renderItem={({item}) => <ListItem item={item} />} */
-                /* renderItem={({item}) => <List.Item title={item} />} */
-                renderItem={({item, index}) => <List.Item title={item} left={() => <List.Icon icon="qrcode" /> }/>}
+            <Appbar.Header>               
+                <TextInput onChangeText={onhandleSearch} value={query} placeholder='Search...'style={styles.searchbar} />
+            </Appbar.Header>           
+            <FlatList                 
+                data={filteredList}
+                renderItem={({item}) => <List.Item title={item} left={() => <List.Icon icon="qrcode" /> }/>}
                 /* keyExtractor={(data) => data.length.toString()} */
-
-            />
-            {/* <Text>Pantalla para hacer listar resultados</Text> */}
-            {/* <StatusBar style="auto" /> */}
+            />           
         </View>
 
 
@@ -42,16 +37,29 @@ const QRList = ({QrString}) => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        /* padding: 20 */
+        flex: 1        
+    },
+    searchbar: {
+        backgroundColor: '#e4e6eb',
+        margin: 3,
+        justifyContent:'center',
+        width: WINDOW_WIDTH - 10,
+        height: 40,
+        borderRadius: 50
     }
 })
+
+const mapDispatchToProps = {
+    setQRList,
+    setFilteredList,
+    setQuery
+}
 
 const mapStateToProps = state => {
     return {
         QrString: state.QrString,
-        /* scannedId: state.scannedId */
+        filteredList: state.filteredList        
     }
 }
 
-export default connect(mapStateToProps, null) (QRList);
+export default connect(mapStateToProps, mapDispatchToProps) (QRList);

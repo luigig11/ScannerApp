@@ -8,7 +8,7 @@ const reducer = (state, action) => {
         case 'SET_SCANNED':
             return {
                 ...state,
-                scanned: action.payload                
+                scanned: action.payload
             }
         case 'SET_FOCUS':
             return {
@@ -20,6 +20,20 @@ const reducer = (state, action) => {
                 ...state,
                 hasPermission: action.payload
             }
+        case 'SET_QUERY':
+            return {
+                ...state,
+                query: action.payload
+            }
+        case 'SET_FILTEREDLIST':
+            return {
+                ...state,
+                /* filteredList: [action.payload] */
+                filteredList: state.QrString.filter((data) =>{
+                    return data.toLowerCase().includes(action.payload.toLowerCase())
+                } )
+                
+            } 
         default:
             return state;
     }
