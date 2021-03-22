@@ -27,8 +27,7 @@ const reducer = (state, action) => {
             }
         case 'SET_FILTEREDLIST':
             return {
-                ...state,
-                /* filteredList: [action.payload] */
+                ...state,                
                 filteredList: state.QrString.filter((data) =>{
                     return data.toLowerCase().includes(action.payload.toLowerCase())
                 } )

@@ -27,8 +27,3 @@ export const setFilteredList = payload => ({
     type: 'SET_FILTEREDLIST',
     payload
 }); 
-
-/* export const beginScann = scanned = ({
-    type: 'BEGIN_SCANN',
-    scanned: true
-}); */
