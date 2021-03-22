@@ -27,8 +27,7 @@ const Scanner = ({ navigation, setQRList, setScanned, scanned, setFocus, focus, 
 
     useFocusEffect(
         React.useCallback(() => {
-            setFocus(true);
-            /* setScanned(false); */
+            setFocus(true);            
             return () => {
                 setScanned(true);
                 setFocus(false);
@@ -38,7 +37,7 @@ const Scanner = ({ navigation, setQRList, setScanned, scanned, setFocus, focus, 
 
     const handledBarcodeScanned = (BarCodeScannerResult) => {
         const { type, data, bounds } = BarCodeScannerResult
-        /* console.log(`type: ${type} data: ${data} origin: ${{ bounds }}`) */
+        
         if (!scanned) {
             const { x, y } = bounds.origin;
             console.log(`x: ${x}, y: ${y}`);
@@ -51,13 +50,13 @@ const Scanner = ({ navigation, setQRList, setScanned, scanned, setFocus, focus, 
 
         }
     }
-
-    if (hasPermission === null) {
-        return <Text>Requesting for camera permision</Text>
+    
+    if (hasPermission === null ) {
+        return <View style={styles.container}><Text >Requesting for camera permision</Text></View>
     }
 
     if (hasPermission === false) {
-        return <Text>No acces to camera</Text>
+        return <View style={styles.container}><Text>No acces to camera</Text></View>
     }
 
     return (
@@ -65,7 +64,7 @@ const Scanner = ({ navigation, setQRList, setScanned, scanned, setFocus, focus, 
         <View style={{ flex: 1 }}>
             <Appbar.Header>
                 <Appbar.Content title='Scanner' />
-            </Appbar.Header>           
+            </Appbar.Header>
             {
                 focus === true
 
@@ -75,31 +74,15 @@ const Scanner = ({ navigation, setQRList, setScanned, scanned, setFocus, focus, 
                         barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
                         style={[StyleSheet.absoluteFillObject, styles.container]}
                     >                        
-                        <View
-                            style={{
-                                flex: 1,
-                                backgroundColor: 'transparent',
-                                flexDirection: 'row'
-                            }}
-                        >
-                             <Pressable
-                                style={{
-                                    flex: 1,
-                                    alignItems: 'flex-end'
-                                }}
-                                onPress={() => {
-                                    setType(
-                                        type === BarCodeScanner.Constants.Type.back ? BarCodeScanner.Constants.Type.front : BarCodeScanner.Constants.Type.back
-                                    );
-                                }}
-                            >
-                                <Text style={{ fontSize: 18, margin: 5, color: 'white' }} >Filp</Text>
-                            </Pressable>  
-                        </View>
-                        <BarcodeMask edgeColor={"#62B1F6"} showAnimatedLine />
-                        {scanned && <Button title={'Tap to Scan'} onPress={() => setScanned(false)} />}
+                        <BarcodeMask edgeColor={"#62B1F6"} showAnimatedLine />                        
+                        {
+                            scanned && 
+                            <View style={styles.button}>
+                                <Button title={'Tap to Scan'} onPress={() => setScanned(false)} />
+                            </View>
+                        }
                     </BarCodeScanner>
-                    
+
 
                     : null
             }
@@ -117,18 +100,23 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
-    
 
-    title: {
+    button: {
+        position: 'absolute',
+        bottom: 100
+        
+    }   
+
+    /* title: {
         fontSize: 20,
         fontWeight: 'bold'
-    },
+    }, */
 
-    separator: {
+    /* separator: {
         marginVertical: 30,
         height: 1,
         width: '80%'
-    }
+    } */
 })
 
 const mapDispatchToProps = {

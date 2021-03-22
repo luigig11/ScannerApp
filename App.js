@@ -7,12 +7,21 @@ import QRList from './src/Screens/ListOfElements'
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import reducer from './src/Redux/reducers/index'
-import { Provider as PaperProvider, Avatar } from 'react-native-paper'
+import {DefaultTheme, Provider as PaperProvider, } from 'react-native-paper'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { color } from 'react-native-reanimated';
 
 
 
 const tabs = createBottomTabNavigator();
+/* primary: '#1e376f' */
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#ffffff'
+  }
+}
 
 const intialState = {
   QrString: [],
@@ -28,7 +37,7 @@ const store = createStore(reducer, intialState);
 export default function App() {
   return (
     <Provider store={store}>
-      <PaperProvider>
+      <PaperProvider theme={theme}>
         <NavigationContainer /* style={styles.container} */>
           <tabs.Navigator initialRouteName={Scanner}>
             <tabs.Screen name="Scanner" component={Scanner} options={{tabBarIcon: ({color, size}) => <Icon name='qrcode-scan' size={size} color={color} />}} />
