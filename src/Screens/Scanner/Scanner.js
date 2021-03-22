@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Dimensions, Button, Pressable } from 'react-native';
-/* import { StatusBar } from 'expo-status-bar'; */
-import { BarCodeScanner, BarCodeScannerResult } from 'expo-barcode-scanner';
+import React, { useEffect } from 'react';
+import { View, Text, StyleSheet, Dimensions, Button } from 'react-native';
+import { BarCodeScanner } from 'expo-barcode-scanner';
 import BarcodeMask from 'react-native-barcode-mask';
 import { connect } from 'react-redux'
-import { setQRList, setScanned, setFocus, setHasPermission, setFilteredList } from '../Redux/actions/index'
+import { setQRList, 
+    setScanned, 
+    setFocus, 
+    setHasPermission, 
+    setFilteredList 
+} from '../../Redux/actions/index'
 import { useFocusEffect } from '@react-navigation/native';
 import { Appbar } from 'react-native-paper'
-
+import styles from './styles'
 
 const FINDERWIDTH = 280;
 const FINDERHEIGHT = 230;
@@ -16,7 +20,12 @@ const DEVICE_HEIGHT = Dimensions.get('window').height;
 const VIEWMINX = (DEVICE_WIDTH - FINDERWIDTH) / 2;
 const VIEWMINY = (DEVICE_HEIGHT - FINDERHEIGHT) / 2;
 
-const Scanner = ({ navigation, setQRList, setScanned, scanned, setFocus, focus, setHasPermission, hasPermission, setFilteredList }) => {
+const Scanner = ({ setQRList, 
+    setScanned, scanned, 
+    setFocus, focus, 
+    setHasPermission, 
+    hasPermission, 
+    setFilteredList }) => {
 
     useEffect(() => {
         (async () => {
@@ -83,7 +92,6 @@ const Scanner = ({ navigation, setQRList, setScanned, scanned, setFocus, focus, 
                         }
                     </BarCodeScanner>
 
-
                     : null
             }
 
@@ -93,31 +101,6 @@ const Scanner = ({ navigation, setQRList, setScanned, scanned, setFocus, focus, 
     );
 
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-
-    button: {
-        position: 'absolute',
-        bottom: 100
-        
-    }   
-
-    /* title: {
-        fontSize: 20,
-        fontWeight: 'bold'
-    }, */
-
-    /* separator: {
-        marginVertical: 30,
-        height: 1,
-        width: '80%'
-    } */
-})
 
 const mapDispatchToProps = {
     setQRList,
@@ -134,6 +117,5 @@ const mapStateToProps = state => {
         hasPermission: state.hasPermission
     }
 }
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(Scanner);
