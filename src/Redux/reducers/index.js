@@ -20,6 +20,19 @@ const reducer = (state, action) => {
                 ...state,
                 hasPermission: action.payload
             }
+        case 'SET_QUERY':
+            return {
+                ...state,
+                query: action.payload
+            }
+        case 'SET_FILTEREDLIST':
+            return {
+                ...state,                
+                filteredList: state.QrString.filter((data) =>{
+                    return data.toLowerCase().includes(action.payload.toLowerCase())
+                } )
+                
+            } 
         default:
             return state;
     }

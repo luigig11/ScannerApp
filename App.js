@@ -1,43 +1,40 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import Scanner from './src/Screens/Scanner'
-import QRList from './src/Screens/ListOfElements'
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import reducer from './src/Redux/reducers/index'
+import { DefaultTheme, Provider as PaperProvider, } from 'react-native-paper'
+import TabsNavigator from './src/components/TabsNavigator';
 
-const tabs = createBottomTabNavigator(); 
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#ffffff'
+  }
+}
 
 const intialState = {
   QrString: [],
   scanned: false,
   focus: false,
-  hasPermission: null
+  hasPermission: null,
+  filteredList: [],
+  query: ''
 }
 
 const store = createStore(reducer, intialState);
 
 export default function App() {
   return (
-    <Provider store={store}> 
-      <NavigationContainer /* style={styles.container} */>
-        <tabs.Navigator initialRouteName={Scanner}>
-          <tabs.Screen name="Scanner" component={Scanner} />
-          <tabs.Screen name="List" component={QRList} />
-        </tabs.Navigator>
-      </NavigationContainer>
-    </Provider> 
+    <Provider store={store}>
+      <PaperProvider theme={theme}>
+        <NavigationContainer >
+          <TabsNavigator />
+        </NavigationContainer>
+      </PaperProvider>
+    </Provider>
   );
 }
 
-/* const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-}); */
